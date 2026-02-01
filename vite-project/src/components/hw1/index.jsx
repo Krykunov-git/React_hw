@@ -1,4 +1,4 @@
-import VideoComponent from '../VideoComponent'
+import VideoComponent from './VideoComponent'
 import ImageComponent from './ImageComponent'
 import ListsComponent from './ListsComponent'
 

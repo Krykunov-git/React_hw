@@ -1,49 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 
 function HwSwitcher() {
-  // Edit these to control order manually (fallback to alphabetical for items not listed)
+  // Optional: control order of homeworks manually; others fall back to alpha
   const homeworkOrder = ['hw1', 'hw2', 'hw3']
-  const componentOrderByHw = {
-    // Example for hw1: order by file name (with .jsx)
-    // hw1: ['VideoComponent.jsx', 'ImageComponent.jsx', 'ListsComponent.jsx'],
-  }
 
   const homeworks = useMemo(() => {
-    const modules = import.meta.glob('./hw*/**/*.jsx', { eager: true })
-    const groups = {}
-
-    for (const [path, mod] of Object.entries(modules)) {
-      if (/index\.jsx$/.test(path)) continue
+    // Discover only root components per homework
+    const modules = import.meta.glob('./hw*/index.jsx', { eager: true })
+    const entries = Object.entries(modules).map(([path, mod]) => {
       const match = path.match(/\.\/(hw[^/]+)\//)
-      const hwId = match ? match[1] : null
-      if (!hwId) continue
-      const Component = mod && mod.default
-      if (!Component) continue
-      if (!groups[hwId]) groups[hwId] = []
-      const name = path.split('/').pop() || 'Component'
-      groups[hwId].push({ name, Component })
-    }
-
-    const entries = Object.entries(groups).map(([id, comps]) => {
-      const manual = componentOrderByHw[id] || []
-      comps.sort((a, b) => {
-        const ia = manual.indexOf(a.name)
-        const ib = manual.indexOf(b.name)
-        const ra = ia === -1 ? Number.MAX_SAFE_INTEGER : ia
-        const rb = ib === -1 ? Number.MAX_SAFE_INTEGER : ib
-        if (ra !== rb) return ra - rb
-        return a.name.localeCompare(b.name, undefined, { numeric: true })
-      })
-      const ComponentGroup = () => (
-        <>
-          {comps.map(({ name, Component }) => (
-            <Component key={name} />
-          ))}
-        </>
-      )
-      return { id, label: id.toUpperCase(), Component: ComponentGroup }
+      const id = match ? match[1] : path
+      const label = id.toUpperCase()
+      const Component = mod.default
+      return { id, label, Component }
     })
-
     entries.sort((a, b) => {
       const ia = homeworkOrder.indexOf(a.id)
       const ib = homeworkOrder.indexOf(b.id)
