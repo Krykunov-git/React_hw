@@ -28,6 +28,9 @@ jobs:
           cache: npm
           cache-dependency-path: vite-project/package-lock.json
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Install dependencies
         working-directory: vite-project
         run: npm ci
