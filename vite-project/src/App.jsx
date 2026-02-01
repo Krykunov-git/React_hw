@@ -1,4 +1,4 @@
-import VideoComponent from './components/VideoComponent'
+import HwSwitcher from './components/HwSwitcher'
 
 
 import './App.css'
@@ -9,7 +9,7 @@ function App() {
   return (
 
     <div>
-      <VideoComponent />
+      <HwSwitcher />
     </div>
 
 

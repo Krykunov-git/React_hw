@@ -6,4 +6,4 @@ function ListsComponent() {
   )
 }
 
-export default ListsComponent;
+export default ListsComponent;  
